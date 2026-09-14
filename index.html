@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f8fa" />
+    <meta name="description" content="Arrange, remove, and download PDF pages. A private PDF editor that works entirely in your browser." />
+    <title>Pagecraft — Your PDF, in order</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%237460db'/%3E%3Cpath d='M13 9h10l5 5v17H13zM23 9v6h5M17 21h7M17 25h5' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="vendor/pdf-lib.min.js" defer></script>
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></symbol>
+      <symbol id="i-undo" viewBox="0 0 24 24"><path d="M8 4 3 9l5 5M3 9h11a7 7 0 0 1 0 14" transform="translate(0 -2)"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-grip" viewBox="0 0 24 24"><path d="M9 5h.01M15 5h.01M9 12h.01M15 12h.01M9 19h.01M15 19h.01" stroke-width="3.5"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    </svg>
+
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Pagecraft home"><span class="brand-mark"><svg><use href="#i-file"/></svg></span>pagecraft<span class="brand-dot">.</span></a>
+      <span class="header-note"><span class="status-dot"></span> A little order. A lot less effort.</span>
+      <span class="privacy-badge"><svg><use href="#i-shield"/></svg>100% on your device</span>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div class="eyebrow">THE SIMPLE PDF ORGANIZER</div>
+        <h1>Your PDF, <span>in order.</span></h1>
+        <p>Keep the pages you need. Put them where they belong.<br>One tidy document, ready to go.</p>
+      </section>
+
+      <input id="file-input" type="file" accept="application/pdf,.pdf" hidden />
+      <input id="image-input" type="file" accept="image/jpeg,.jpg,.jpeg" multiple hidden />
+      <input id="append-pdf-input" type="file" accept="application/pdf,.pdf" multiple hidden />
+      <section id="upload-view" class="upload-view" aria-label="Open a PDF">
+        <div id="drop-zone" class="drop-zone">
+          <div class="upload-art" aria-hidden="true"><div class="art-back"></div><div class="art-page"><svg><use href="#i-file"/></svg><span>PDF</span></div><span class="art-plus">+</span></div>
+          <h2>A fresh start for your PDF</h2>
+          <p>Drag and drop your document here</p>
+          <button id="choose-file" class="button primary"><svg><use href="#i-upload"/></svg>Choose PDF file</button>
+          <span class="upload-hint">or drop it anywhere on this page · up to 100 MB</span>
+        </div>
+        <div class="sample-row"><span>Just looking around?</span> <button id="try-sample" class="text-button">Try a sample PDF <svg><use href="#i-arrow"/></svg></button></div>
+      </section>
+
+      <section id="editor-view" class="editor" aria-label="PDF page editor" hidden>
+        <div class="document-bar">
+          <div class="document-info"><div class="file-icon"><svg><use href="#i-file"/></svg></div><div><h2 id="file-name"></h2><p id="file-details"></p></div></div>
+          <div class="document-actions"><button id="replace-file" class="button secondary"><svg><use href="#i-upload"/></svg><span>Open another</span></button><button id="download" class="button primary"><svg><use href="#i-download"/></svg><span>Download PDF</span></button></div>
+        </div>
+        <div class="editor-toolbar">
+          <div class="selection-tools"><label class="select-all"><input id="select-all" type="checkbox" /> <span id="selection-label">Select all</span></label><span class="divider"></span><button id="remove-selected" class="text-button danger" disabled><svg><use href="#i-trash"/></svg>Remove<span id="selected-count"></span></button></div>
+          <div class="history-tools"><button id="undo" class="text-button" disabled title="Undo (Ctrl/⌘ Z)"><svg><use href="#i-undo"/></svg>Undo</button><button id="reset" class="text-button" disabled>Reset</button></div>
+        </div>
+        <div class="canvas-heading"><span><strong id="page-count"></strong><span class="canvas-dot">·</span>Drag pages to reorder</span><div class="add-page-actions"><button id="add-pdf" class="button secondary" title="Append pages from PDF documents"><svg><use href="#i-file"/></svg>Add PDF</button><button id="add-images" class="button secondary" title="Append JPG images as new pages"><svg><use href="#i-upload"/></svg>Add JPG pages</button></div></div>
+        <div id="page-grid" class="page-grid" role="list" aria-label="Pages in download order"></div>
+        <div id="empty-pages" class="empty-pages" hidden><svg><use href="#i-file"/></svg><h3>A clean slate</h3><p>All pages have been removed. Undo or reset to bring them back.</p><button id="restore-pages" class="button secondary">Restore all pages</button></div>
+        <div class="editor-footer"><span><svg><use href="#i-shield"/></svg>Your original file stays untouched.</span><span id="edit-status">Ready when you are</span></div>
+      </section>
+
+      <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+      <div id="loading" class="loading" role="status" hidden><span class="spinner"></span><span id="loading-label">Opening your PDF…</span></div>
+
+      <section class="features" aria-label="How it works">
+        <article><span class="feature-icon"><svg><use href="#i-grip"/></svg></span><h3>A place for every page</h3><p>Drag to rearrange. Remove the extras.<br>Make your document flow.</p></article>
+        <article><span class="feature-icon"><svg><use href="#i-shield"/></svg></span><h3>Your files stay yours</h3><p>Everything happens in your browser.<br>No uploads. No accounts. No worries.</p></article>
+        <article><span class="feature-icon"><svg><use href="#i-download"/></svg></span><h3>Done in a few clicks</h3><p>Download your freshly organized PDF.<br>Same quality, better order.</p></article>
+      </section>
+    </main>
+    <footer class="site-footer"><span>Less paperwork. More possibility.</span><span>Made for the little things that need sorting.</span></footer>
+    <noscript><p class="message">Please enable JavaScript to use this PDF editor.</p></noscript>
+    <script>if (location.protocol === 'file:') document.getElementById('message').outerHTML = '<p class="message">Please serve this folder over HTTP. See README.md for a one-command local server.</p>';</script>
+  </body>
+</html>
