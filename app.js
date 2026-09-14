@@ -533,7 +533,7 @@ async function sample() {
       page.drawCircle({ x: 210, y: 225, size: 76, color: rgb(.97, .95, .90) });
       page.drawRectangle({ x: 164 + i * 8, y: 120, width: 90, height: 127 + i * 10, color: purple });
       page.drawText('A collection of ideas, beautifully in order.', { x: 36, y: 77, size: 9, font: regular, color: gray });
-      page.drawText(`PAGECRAFT                                        ${String(i + 1).padStart(2, '0')}`, { x: 36, y: 35, size: 8, font: bold, color: purple });
+      page.drawText(`PDF editor                                        ${String(i + 1).padStart(2, '0')}`, { x: 36, y: 35, size: 8, font: bold, color: purple });
     }
     doc.setTitle('The Everyday Edit');
     file = new File([await doc.save()], 'The everyday edit.pdf', { type: 'application/pdf' });

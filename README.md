@@ -1,4 +1,4 @@
-# Pagecraft
+# PDF editor
 
 A client-only JavaScript SPA for organizing PDF pages. No build, backend, account, or external runtime requests. PDF files stay in browser memory.
 

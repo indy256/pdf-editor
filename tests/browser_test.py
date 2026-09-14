@@ -14,7 +14,7 @@ def run():
         page.on('pageerror', lambda error: errors.append(str(error)))
         page.on('request', lambda request: external_requests.append(request.url) if not request.url.startswith(('http://127.0.0.1:8080/', 'blob:', 'data:')) else None)
         page.goto('http://127.0.0.1:8080/')
-        expect(page.get_by_role('heading', name='Your PDF, in order.')).to_be_visible()
+        expect(page.get_by_role('heading', name='Your PDF editor.')).to_be_visible()
         page.screenshot(path=str(Path(temp) / 'upload.png'), full_page=True)
         page.get_by_role('button', name='Try a sample PDF').click()
         expect(page.locator('.page-card')).to_have_count(4)
