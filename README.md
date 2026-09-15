@@ -1,6 +1,6 @@
 # PDF editor
 
-A client-only JavaScript SPA for organizing PDF pages. No build, backend, account, or external runtime requests. PDF files stay in browser memory.
+A client-only JavaScript SPA for organizing PDF pages. No build, backend, or account required. PDF files stay in browser memory. The page loads Google Analytics (`G-F2E4TJR9YG`) for usage statistics; PDF processing libraries remain bundled locally.
 
 ## Run
 

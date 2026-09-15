@@ -10,6 +10,9 @@ def run():
     with sync_playwright() as playwright, tempfile.TemporaryDirectory() as temp:
         browser = playwright.chromium.launch(channel=os.getenv('BROWSER_CHANNEL', 'msedge'), headless=True)
         page = browser.new_page(viewport={"width": 1365, "height": 1000}, accept_downloads=True)
+        analytics_url = 'https://www.googletagmanager.com/gtag/js?id=G-F2E4TJR9YG'
+        # Keep automated editor checks out of production analytics.
+        page.route(analytics_url, lambda route: route.fulfill(status=200, content_type='application/javascript', body=''))
         errors, external_requests = [], []
         page.on('pageerror', lambda error: errors.append(str(error)))
         page.on('request', lambda request: external_requests.append(request.url) if not request.url.startswith(('http://127.0.0.1:8080/', 'blob:', 'data:')) else None)
@@ -288,9 +291,9 @@ def run():
         page.set_viewport_size({'width': 1365, 'height': 1000})
         page.screenshot(path=str(Path(__file__).parent / 'editor-check.png'), full_page=True)
         assert not errors, errors
-        assert not external_requests, external_requests
+        assert external_requests == [analytics_url], external_requests
         browser.close()
-        print('PASS: PDF upload/append/batch/drop, merged PDF text and sizes, neighbouring JPG width, JPG import/orientation/pixels, atomic invalid batches, reorder/remove/undo/reset, session replacement, mobile layout, and no external requests.')
+        print('PASS: PDF upload/append/batch/drop, merged PDF text and sizes, neighbouring JPG width, JPG import/orientation/pixels, atomic invalid batches, reorder/remove/undo/reset, session replacement, mobile layout, and no unexpected external requests (analytics stubbed).')
 
 
 if __name__ == '__main__':
